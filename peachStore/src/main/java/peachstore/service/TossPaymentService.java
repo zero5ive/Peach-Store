@@ -78,6 +78,7 @@ public class TossPaymentService {
 	 * @param paymentSessionData
 	 * @return
 	 */
+	@Transactional
 	public TossConfirmResponse handlePaymentAndSession(ConfirmPaymentRequest request, HttpSession session, PaymentSessionData paymentSessionData) {
 		// 결제 승인 요청 응답 수신
 		TossConfirmResponse response = confirmPayment(request.getPaymentKey(), request.getOrderId(), request.getAmount());
@@ -129,6 +130,12 @@ public class TossPaymentService {
 		List<SnapShot> snapshotList = (List<SnapShot>)session.getAttribute("cartSnapshots");
 		if (snapshotList == null || snapshotList.isEmpty()) {
 			throw new IllegalStateException("장바구니 스냅샷이 세션에 없습니다.");
+		}
+
+		// 중복 결제 방지: 동일 paymentKey 가 이미 DB 에 존재하면 즉시 거부
+		if (tosspaymentDAO.selectByPaymentKey(request.getPaymentKey()) != null) {
+			log.warn("중복 결제 시도 감지. paymentKey={}", request.getPaymentKey());
+			throw new TosspaymentException("이미 처리된 결제입니다.");
 		}
 
 		// 결제 정보 DB 저장

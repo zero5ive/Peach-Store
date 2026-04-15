@@ -351,11 +351,9 @@ body {
         })
         .then(res => {
             if (!res.ok) throw new Error(res.status);
-            // 최종 성공 페이지로 이동
             window.location.href = "/shop/payment/success?orderReceiptId=" + orderId + "&amount=" + amount;
         })
         .catch(() => {
-            // 실패 페이지로 이동
             window.location.href = "/shop/payment/fail?orderId=" + orderId + "&amount=" + amount;
         });
     

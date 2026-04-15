@@ -16,4 +16,11 @@ public interface TosspaymentDAO {
 	 */
 	public Tosspayment insert(Tosspayment tosspayment);
 
+	/**
+	 * paymentKey 로 결제 정보 조회 (중복 결제 방지용)
+	 * @param tossPaymentKey
+	 * @return 존재하면 Tosspayment, 없으면 null
+	 */
+	public Tosspayment selectByPaymentKey(String tossPaymentKey);
+
 }

@@ -24,11 +24,16 @@ public class TosspaymentDAOImpl implements TosspaymentDAO{
 
 	@Override
 	public Tosspayment insert(Tosspayment tosspayment){
-		
+
 		int result = sqlSessionTemplate.insert("Tosspayment.insert", tosspayment);
 		log.debug("insert count - {}", result);
 
 		return tosspayment;
+	}
+
+	@Override
+	public Tosspayment selectByPaymentKey(String tossPaymentKey) {
+		return sqlSessionTemplate.selectOne("Tosspayment.selectByPaymentKey", tossPaymentKey);
 	}
 
 }
